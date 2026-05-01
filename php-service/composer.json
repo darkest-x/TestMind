@@ -1,0 +1,21 @@
+{
+    "name": "testmind/testmind-php-service",
+    "description": "TestMind User Service - PHP implementation",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "TestMind Team"
+        }
+    ],
+    "require": {
+        "slim/slim": "^4.12",
+        "slim/psr7": "^1.6",
+        "php-di/php-di": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TestMind\\": "src/"
+        }
+    }
+}

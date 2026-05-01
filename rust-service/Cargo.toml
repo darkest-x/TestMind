@@ -1,0 +1,12 @@
+[package]
+name = "testmind-rust-service"
+version = "1.0.0"
+description = "TestMind User Service - Rust implementation"
+edition = "2021"
+license = "MIT"
+authors = ["TestMind Team"]
+
+[dependencies]
+actix-web = "4.4"
+serde = { version = "1.0", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde"] }
