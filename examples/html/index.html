@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>用户管理系统</h1>
+            <button class="btn btn-primary" id="addUserBtn">
+                添加用户
+            </button>
+        </header>
+
+        <main class="main-content">
+            <section class="search-section">
+                <input
+                    type="text"
+                    class="search-input"
+                    id="searchInput"
+                    placeholder="搜索用户..."
+                />
+                <button class="btn btn-search" id="searchBtn">
+                    搜索
+                </button>
+            </section>
+
+            <section class="user-list-section">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户名</th>
+                            <th>邮箱</th>
+                            <th>姓名</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 TestMind - 用户管理系统</p>
+        </footer>
+    </div>
+
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="modalTitle">添加用户</h2>
+            <form id="userForm">
+                <input type="hidden" id="userId" />
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input
+                        type="text"
+                        id="username"
+                        class="form-input"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="email">邮箱</label>
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-input"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input
+                        type="password"
+                        id="password"
+                        class="form-input"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="firstName">名字</label>
+                    <input
+                        type="text"
+                        id="firstName"
+                        class="form-input"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="lastName">姓氏</label>
+                    <input
+                        type="text"
+                        id="lastName"
+                        class="form-input"
+                    />
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="active" checked />
+                        激活
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        保存
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">
+                        取消
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
