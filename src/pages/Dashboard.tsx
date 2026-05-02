@@ -7,26 +7,27 @@ export const Dashboard: React.FC = () => {
   const { theme } = useTheme();
   
   const stats = [
-    { label: '总测试用例', value: '1,568', icon: TestCaseIcon, color: 'from-blue-500 to-blue-400' },
-    { label: '自动化覆盖率', value: '89.1%', icon: TrendUpIcon, color: 'from-green-500 to-green-400' },
+    { label: '总测试用例', value: '1,623', icon: TestCaseIcon, color: 'from-blue-500 to-blue-400' },
+    { label: '自动化覆盖率', value: '89.7%', icon: TrendUpIcon, color: 'from-green-500 to-green-400' },
     { label: '支持的语言', value: '8', icon: CodeIcon, color: 'from-purple-500 to-purple-400' },
-    { label: '测试用户', value: '1,056', icon: UserIcon, color: 'from-orange-500 to-orange-400' },
+    { label: '测试用户', value: '1,078', icon: UserIcon, color: 'from-orange-500 to-orange-400' },
   ];
 
   const recentActivity = [
-    { id: 1, action: '生成了单元测试', target: 'PaymentGateway.java', time: '5 分钟前', status: 'success' },
-    { id: 2, action: '生成了接口测试', target: 'RealTimeChat.go', time: '15 分钟前', status: 'success' },
-    { id: 3, action: '生成了边界测试', target: 'main.py', time: '1 小时前', status: 'pending' },
-    { id: 4, action: '运行了测试套件', target: '项目 TestMind', time: '2 小时前', status: 'error' },
-    { id: 5, action: '导入了测试文件', target: 'UserServiceTest.java', time: '3 小时前', status: 'success' },
-    { id: 6, action: '添加了新贡献者', target: 'Chen Jie', time: '4 小时前', status: 'info' },
+    { id: 1, action: '生成了单元测试', target: 'PaymentGateway.java', time: '10分钟前', status: 'success' },
+    { id: 2, action: '生成了接口测试', target: 'RealTimeChat.go', time: '30分钟前', status: 'success' },
+    { id: 3, action: '生成了边界测试', target: 'main.py', time: '2小时前', status: 'pending' },
+    { id: 4, action: '运行了测试套件', target: '项目 TestMind', time: '4小时前', status: 'error' },
+    { id: 5, action: '导入了测试文件', target: 'UserServiceTest.java', time: '6小时前', status: 'success' },
+    { id: 6, action: '添加了新贡献者', target: 'Chen Jie', time: '8小时前', status: 'info' },
+    { id: 7, action: '更新了测试统计', target: 'Dashboard', time: '10小时前', status: 'success' }
   ];
 
   const projects = [
-    { id: 1, name: 'DocuForge', progress: 75, status: 'active', type: '前端' },
-    { id: 2, name: 'TestMind', progress: 85, status: 'active', type: '多语言' },
-    { id: 3, name: 'AuthSystem', progress: 45, status: 'pending', type: '后端' },
-    { id: 4, name: 'RealTimeChat', progress: 68, status: 'active', type: '实时' },
+    { id: 1, name: 'DocuForge', progress: 78, status: 'active', type: '前端' },
+    { id: 2, name: 'TestMind', progress: 88, status: 'active', type: '多语言' },
+    { id: 3, name: 'AuthSystem', progress: 52, status: 'pending', type: '后端' },
+    { id: 4, name: 'RealTimeChat', progress: 75, status: 'active', type: '实时' }
   ];
 
   return (
