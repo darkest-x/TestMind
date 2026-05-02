@@ -9,7 +9,7 @@ export const mockProjects: Project[] = [
     language: 'TypeScript',
     testCases: [],
     createdAt: '2024-03-15T10:30:00Z',
-    updatedAt: '2024-05-01T08:00:00Z'
+    updatedAt: '2024-05-02T08:00:00Z'
   },
   {
     id: 'project-2',
@@ -19,7 +19,7 @@ export const mockProjects: Project[] = [
     language: 'Node.js',
     testCases: [],
     createdAt: '2024-02-20T14:45:00Z',
-    updatedAt: '2024-04-28T16:30:00Z'
+    updatedAt: '2024-05-01T16:30:00Z'
   },
   {
     id: 'project-3',
@@ -29,7 +29,27 @@ export const mockProjects: Project[] = [
     language: 'Python',
     testCases: [],
     createdAt: '2024-01-10T09:15:00Z',
-    updatedAt: '2024-04-25T11:20:00Z'
+    updatedAt: '2024-04-30T11:20:00Z'
+  },
+  {
+    id: 'project-4',
+    name: '实时聊天系统',
+    description: '基于 WebSocket 的实时聊天和消息推送系统',
+    repositoryUrl: 'https://github.com/darkest-x/chat-system',
+    language: 'Go',
+    testCases: [],
+    createdAt: '2024-04-05T11:00:00Z',
+    updatedAt: '2024-05-02T09:15:00Z'
+  },
+  {
+    id: 'project-5',
+    name: '支付网关服务',
+    description: '集成多种支付方式的网关服务',
+    repositoryUrl: 'https://github.com/darkest-x/payment-gateway',
+    language: 'Java',
+    testCases: [],
+    createdAt: '2024-03-20T14:30:00Z',
+    updatedAt: '2024-05-01T14:00:00Z'
   }
 ]
 
@@ -51,7 +71,7 @@ export const mockTestCases: TestCase[] = [
   })
 })`,
     createdAt: '2024-05-01T08:15:00Z',
-    updatedAt: '2024-05-01T08:15:00Z',
+    updatedAt: '2024-05-02T08:15:00Z',
     tags: ['authentication', 'unit'],
     projectId: 'project-1'
   },
@@ -70,7 +90,7 @@ export const mockTestCases: TestCase[] = [
   })
 })`,
     createdAt: '2024-05-01T08:20:00Z',
-    updatedAt: '2024-05-01T08:20:00Z',
+    updatedAt: '2024-05-02T08:20:00Z',
     tags: ['api', 'performance'],
     projectId: 'project-1'
   },
@@ -95,7 +115,7 @@ export const mockTestCases: TestCase[] = [
   })
 })`,
     createdAt: '2024-05-01T08:25:00Z',
-    updatedAt: '2024-05-01T08:25:00Z',
+    updatedAt: '2024-05-02T08:25:00Z',
     tags: ['boundary', 'edge-case'],
     projectId: 'project-1'
   },
@@ -113,7 +133,7 @@ export const mockTestCases: TestCase[] = [
   })
 })`,
     createdAt: '2024-04-28T10:00:00Z',
-    updatedAt: '2024-04-28T10:00:00Z',
+    updatedAt: '2024-05-02T10:00:00Z',
     tags: ['jwt', 'auth'],
     projectId: 'project-2'
   },
@@ -122,7 +142,7 @@ export const mockTestCases: TestCase[] = [
     name: '分页 API 测试',
     description: '测试分页接口的各种边界情况',
     type: 'api',
-    status: 'running',
+    status: 'passed',
     code: `describe('Pagination API', () => {
   test('should return first page by default', async () => {
     const result = await api.get('/users')
@@ -135,9 +155,63 @@ export const mockTestCases: TestCase[] = [
   })
 })`,
     createdAt: '2024-04-25T15:30:00Z',
-    updatedAt: '2024-04-25T15:30:00Z',
+    updatedAt: '2024-05-01T15:30:00Z',
     tags: ['api', 'pagination'],
     projectId: 'project-1'
+  },
+  {
+    id: 'test-6',
+    name: 'WebSocket 连接测试',
+    description: '测试 WebSocket 连接建立和消息收发',
+    type: 'api',
+    status: 'running',
+    code: `describe('WebSocket Connection', () => {
+  test('should establish connection', async () => {
+    const ws = new WebSocket('ws://localhost:8080')
+    await new Promise(resolve => ws.onopen = resolve)
+    expect(ws.readyState).toBe(WebSocket.OPEN)
+  })
+})`,
+    createdAt: '2024-05-02T10:00:00Z',
+    updatedAt: '2024-05-02T10:00:00Z',
+    tags: ['websocket', 'realtime'],
+    projectId: 'project-4'
+  },
+  {
+    id: 'test-7',
+    name: '支付回调验证',
+    description: '测试支付回调的签名验证逻辑',
+    type: 'unit',
+    status: 'passed',
+    code: `describe('Payment Callback', () => {
+  test('should verify callback signature', () => {
+    const callback = createTestCallback()
+    const isValid = verifySignature(callback)
+    expect(isValid).toBe(true)
+  })
+})`,
+    createdAt: '2024-05-01T14:00:00Z',
+    updatedAt: '2024-05-01T14:00:00Z',
+    tags: ['payment', 'security'],
+    projectId: 'project-5'
+  },
+  {
+    id: 'test-8',
+    name: '数据导出功能',
+    description: '测试 Excel/CSV 数据导出的边界情况',
+    type: 'boundary',
+    status: 'pending',
+    code: `describe('Data Export', () => {
+  test('should handle large dataset export', () => {
+    const largeData = generateLargeDataset(10000)
+    const result = exportToCSV(largeData)
+    expect(result).toBeDefined()
+  })
+})`,
+    createdAt: '2024-05-02T09:30:00Z',
+    updatedAt: '2024-05-02T09:30:00Z',
+    tags: ['export', 'data'],
+    projectId: 'project-3'
   }
 ]
 
@@ -151,7 +225,7 @@ export const mockTestReports: TestReport[] = [
     skipped: 6,
     coverage: 85.3,
     duration: 45.2,
-    createdAt: '2024-05-01T08:00:00Z',
+    createdAt: '2024-05-02T08:00:00Z',
     testCases: []
   },
   {
@@ -163,20 +237,45 @@ export const mockTestReports: TestReport[] = [
     skipped: 2,
     coverage: 91.2,
     duration: 23.8,
-    createdAt: '2024-04-28T16:00:00Z',
+    createdAt: '2024-05-01T16:00:00Z',
+    testCases: []
+  },
+  {
+    id: 'report-3',
+    projectId: 'project-4',
+    totalTests: 67,
+    passed: 65,
+    failed: 1,
+    skipped: 1,
+    coverage: 88.7,
+    duration: 32.1,
+    createdAt: '2024-05-02T09:00:00Z',
+    testCases: []
+  },
+  {
+    id: 'report-4',
+    projectId: 'project-5',
+    totalTests: 112,
+    passed: 108,
+    failed: 3,
+    skipped: 1,
+    coverage: 92.4,
+    duration: 56.8,
+    createdAt: '2024-05-01T14:00:00Z',
     testCases: []
   }
 ]
 
 export const mockDashboardStats = {
   totalProjects: 5,
-  totalTestCases: 342,
-  totalReports: 128,
-  avgCoverage: 87.5,
+  totalTestCases: 442,
+  totalReports: 145,
+  avgCoverage: 89.1,
   recentTests: [
     { name: '电商平台 API', count: 156, passed: 142, date: '今天' },
     { name: '用户认证服务', count: 89, passed: 85, date: '昨天' },
     { name: '数据分析工具', count: 67, passed: 62, date: '2天前' },
-    { name: '支付系统', count: 30, passed: 28, date: '3天前' }
+    { name: '实时聊天系统', count: 67, passed: 65, date: '今天' },
+    { name: '支付网关服务', count: 112, passed: 108, date: '昨天' }
   ]
 }
