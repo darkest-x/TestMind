@@ -13,6 +13,7 @@ export const mockNotifications: Notification[] = [
     type: 'error',
     message: '用户认证服务有 2 个测试用例失败',
     read: false,
+    
     createdAt: '2024-05-02T09:15:00Z'
   },
   {
