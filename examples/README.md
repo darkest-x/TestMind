@@ -30,6 +30,13 @@ examples/
 │   ├── repositories/
 │   │   └── userRepository.go
 │   └── user_service.go
+├── cpp/
+│   ├── UserManager.h
+│   └── UserManager.cpp
+├── rust/
+│   └── user_manager.rs
+├── php/
+│   └── UserManager.php
 └── html/
     ├── index.html
     ├── styles.css
@@ -42,6 +49,9 @@ examples/
 - **Python** - Web 开发和数据处理
 - **JavaScript/TypeScript** - 前端和 Node.js 后端
 - **Go** - 高性能后端服务
+- **C++** - 高性能系统编程
+- **Rust** - 内存安全的系统编程
+- **PHP** - Web 应用开发
 - **HTML/CSS** - 前端界面
 
 ## 使用说明
@@ -52,3 +62,11 @@ examples/
 - 数据验证
 - 错误处理
 - 类型定义
+
+## 更新日志
+
+### 2024-05-03
+- 新增 C++ 示例
+- 新增 Rust 示例
+- 新增 PHP 示例
+- 优化现有示例代码结构

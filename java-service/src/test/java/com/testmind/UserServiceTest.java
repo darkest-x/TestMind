@@ -338,4 +338,94 @@ class UserServiceTest {
             assertEquals(testUser.getActive(), dto.getActive());
         }
     }
+
+    @Nested
+    @DisplayName("Edge Case Tests")
+    class EdgeCaseTests {
+
+        @Test
+        @DisplayName("Should handle very long usernames")
+        void shouldHandleVeryLongUsernames() {
+            String longUsername = "a".repeat(255);
+            CreateUserRequest request = new CreateUserRequest();
+            request.setUsername(longUsername);
+            request.setEmail("test@testmind.com");
+            
+            when(userRepository.existsByUsername(longUsername)).thenReturn(false);
+            when(userRepository.existsByEmail("test@testmind.com")).thenReturn(false);
+            when(userRepository.save(any(User.class))).thenReturn(testUser);
+            
+            UserDTO result = userService.createUser(request);
+            
+            assertNotNull(result);
+        }
+
+        @Test
+        @DisplayName("Should handle very long emails")
+        void shouldHandleVeryLongEmails() {
+            String localPart = "a".repeat(64);
+            String domain = "a".repeat(63) + ".com";
+            String longEmail = localPart + "@" + domain;
+            CreateUserRequest request = new CreateUserRequest();
+            request.setUsername("testuser");
+            request.setEmail(longEmail);
+            
+            when(userRepository.existsByUsername("testuser")).thenReturn(false);
+            when(userRepository.existsByEmail(longEmail)).thenReturn(false);
+            when(userRepository.save(any(User.class))).thenReturn(testUser);
+            
+            UserDTO result = userService.createUser(request);
+            
+            assertNotNull(result);
+        }
+    }
+
+    @Nested
+    @DisplayName("Integration Tests")
+    class IntegrationTests {
+
+        @Test
+        @DisplayName("Should complete create-update-delete workflow")
+        void shouldCompleteWorkflow() {
+            CreateUserRequest createRequest = new CreateUserRequest();
+            createRequest.setUsername("workflowuser");
+            createRequest.setEmail("workflow@testmind.com");
+            
+            UpdateUserRequest updateRequest = new UpdateUserRequest();
+            updateRequest.setFirstName("Updated");
+            
+            when(userRepository.existsByUsername("workflowuser")).thenReturn(false);
+            when(userRepository.existsByEmail("workflow@testmind.com")).thenReturn(false);
+            when(userRepository.save(any(User.class))).thenReturn(testUser);
+            when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+            
+            UserDTO created = userService.createUser(createRequest);
+            assertNotNull(created);
+            
+            UserDTO updated = userService.updateUser(1L, updateRequest);
+            assertNotNull(updated);
+            
+            userService.deleteUser(1L);
+            verify(userRepository, times(1)).deleteById(1L);
+        }
+    }
+
+    @Nested
+    @DisplayName("Performance Tests")
+    class PerformanceTests {
+
+        @Test
+        @DisplayName("Should find user by ID within acceptable time")
+        void shouldFindUserQuickly() {
+            when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+            
+            long startTime = System.currentTimeMillis();
+            UserDTO result = userService.findUserById(1L);
+            long endTime = System.currentTimeMillis();
+            
+            long duration = endTime - startTime;
+            assertTrue(duration < 1000, "User lookup should be fast");
+            assertNotNull(result);
+        }
+    }
 }

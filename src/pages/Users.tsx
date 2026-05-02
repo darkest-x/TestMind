@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Layout } from '../components/layout/Layout';
 import { SearchIcon, PlusIcon, EditIcon, TrashIcon, FilterIcon } from '../components/icons';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface User {
   id: number;
@@ -19,6 +20,7 @@ export const Users: React.FC = () => {
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'developer' | 'viewer'>('all');
+  const { theme } = useTheme();
 
   const users: User[] = [
     {
@@ -94,11 +96,17 @@ export const Users: React.FC = () => {
   });
 
   const getRoleBadge = (role: string) => {
-    const colors = {
-      admin: 'bg-red-100 text-red-800',
-      developer: 'bg-blue-100 text-blue-800',
-      viewer: 'bg-gray-100 text-gray-800',
-    };
+    const colors = theme === 'dark' 
+      ? {
+          admin: 'bg-red-900/30 text-red-300',
+          developer: 'bg-blue-900/30 text-blue-300',
+          viewer: 'bg-gray-700/30 text-gray-300',
+        }
+      : {
+          admin: 'bg-red-100 text-red-800',
+          developer: 'bg-blue-100 text-blue-800',
+          viewer: 'bg-gray-100 text-gray-800',
+        };
     const labels = {
       admin: '管理员',
       developer: '开发者',
@@ -115,23 +123,35 @@ export const Users: React.FC = () => {
     <Layout title="用户管理">
       <div className="space-y-6">
         {/* 搜索和过滤器 */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div className={`rounded-xl shadow-sm border p-6 ${
+          theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        }`}>
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             <div className="flex-1 flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
               <div className="relative flex-1">
-                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <SearchIcon className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
+                  theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+                }`} />
                 <input
                   type="text"
                   placeholder="搜索用户..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                    theme === 'dark' 
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                      : 'bg-white border-gray-300 text-gray-900'
+                  }`}
                 />
               </div>
               <select
                 value={activeFilter}
                 onChange={(e) => setActiveFilter(e.target.value as any)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className={`px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                  theme === 'dark' 
+                    ? 'bg-gray-700 border-gray-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
               >
                 <option value="all">所有状态</option>
                 <option value="active">活跃</option>
@@ -140,7 +160,11 @@ export const Users: React.FC = () => {
               <select
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value as any)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className={`px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                  theme === 'dark' 
+                    ? 'bg-gray-700 border-gray-600 text-white' 
+                    : 'bg-white border-gray-300 text-gray-900'
+                }`}
               >
                 <option value="all">所有角色</option>
                 <option value="admin">管理员</option>
@@ -156,37 +180,59 @@ export const Users: React.FC = () => {
         </div>
 
         {/* 用户表格 */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className={`rounded-xl shadow-sm border overflow-hidden ${
+          theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        }`}>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className={`border-b ${
+                theme === 'dark' ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'
+              }`}>
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                     用户
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                     角色
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                     编程语言
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                     项目数
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                     测试用例
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                     状态
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-500'
+                  }`}>
                     操作
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className={`divide-y ${
+                theme === 'dark' ? 'divide-gray-700' : 'divide-gray-200'
+              }`}>
                 {filteredUsers.map((user) => (
-                  <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={user.id} className={`transition-colors ${
+                    theme === 'dark' ? 'hover:bg-gray-700/50' : 'hover:bg-gray-50'
+                  }`}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
@@ -195,9 +241,15 @@ export const Users: React.FC = () => {
                           </div>
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{user.firstName} {user.lastName}</div>
-                          <div className="text-sm text-gray-500">@{user.username}</div>
-                          <div className="text-xs text-gray-400">{user.email}</div>
+                          <div className={`text-sm font-medium ${
+                            theme === 'dark' ? 'text-white' : 'text-gray-900'
+                          }`}>{user.firstName} {user.lastName}</div>
+                          <div className={`text-sm ${
+                            theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                          }`}>@{user.username}</div>
+                          <div className={`text-xs ${
+                            theme === 'dark' ? 'text-gray-500' : 'text-gray-400'
+                          }`}>{user.email}</div>
                         </div>
                       </div>
                     </td>
@@ -205,27 +257,47 @@ export const Users: React.FC = () => {
                       {getRoleBadge(user.role)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900">{user.language}</span>
+                      <span className={`text-sm ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>{user.language}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900">{user.projects}</span>
+                      <span className={`text-sm ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>{user.projects}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-900">{user.testCases.toLocaleString()}</span>
+                      <span className={`text-sm ${
+                        theme === 'dark' ? 'text-white' : 'text-gray-900'
+                      }`}>{user.testCases.toLocaleString()}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        user.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        theme === 'dark'
+                          ? user.active 
+                            ? 'bg-green-900/30 text-green-300' 
+                            : 'bg-red-900/30 text-red-300'
+                          : user.active 
+                            ? 'bg-green-100 text-green-800' 
+                            : 'bg-red-100 text-red-800'
                       }`}>
                         {user.active ? '活跃' : '不活跃'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <button className="p-1.5 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors">
+                        <button className={`p-1.5 rounded-lg transition-colors ${
+                          theme === 'dark' 
+                            ? 'text-blue-400 hover:bg-blue-900/30' 
+                            : 'text-blue-600 hover:bg-blue-100'
+                        }`}>
                           <EditIcon className="w-4 h-4" />
                         </button>
-                        <button className="p-1.5 text-red-600 hover:bg-red-100 rounded-lg transition-colors">
+                        <button className={`p-1.5 rounded-lg transition-colors ${
+                          theme === 'dark' 
+                            ? 'text-red-400 hover:bg-red-900/30' 
+                            : 'text-red-600 hover:bg-red-100'
+                        }`}>
                           <TrashIcon className="w-4 h-4" />
                         </button>
                       </div>
@@ -239,15 +311,25 @@ export const Users: React.FC = () => {
 
         {/* 分页 */}
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-700">
+          <div className={`text-sm ${
+            theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+          }`}>
             显示 <span className="font-medium">1</span> 到 <span className="font-medium">{filteredUsers.length}</span> 条结果，共 <span className="font-medium">{filteredUsers.length}</span> 条
           </div>
           <div className="flex items-center space-x-2">
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+            <button className={`px-3 py-1 border rounded text-sm disabled:opacity-50 ${
+              theme === 'dark' 
+                ? 'border-gray-600 text-gray-400 hover:bg-gray-700/50' 
+                : 'border-gray-300 text-gray-500 hover:bg-gray-50'
+            }`} disabled>
               上一页
             </button>
             <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm">1</button>
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50" disabled>
+            <button className={`px-3 py-1 border rounded text-sm disabled:opacity-50 ${
+              theme === 'dark' 
+                ? 'border-gray-600 text-gray-300 hover:bg-gray-700/50' 
+                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            }`} disabled>
               下一页
             </button>
           </div>
