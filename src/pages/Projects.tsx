@@ -86,6 +86,28 @@ export const Projects: React.FC = () => {
       lastUpdated: '5 小时前',
       author: 'Admin User',
     },
+    {
+      id: 7,
+      name: 'RealTimeChat',
+      description: '实时聊天系统，基于 WebSocket 的消息推送',
+      language: 'Go',
+      testCases: 312,
+      coverage: 88.7,
+      status: 'active',
+      lastUpdated: '15 分钟前',
+      author: 'Wang Hong',
+    },
+    {
+      id: 8,
+      name: 'PaymentGateway',
+      description: '支付网关，集成多种支付方式的验证系统',
+      language: 'Java',
+      testCases: 456,
+      coverage: 92.4,
+      status: 'active',
+      lastUpdated: '45 分钟前',
+      author: 'Zhang Wei',
+    },
   ];
 
   const languages = ['all', 'TypeScript', 'Java', 'Go', 'Python', 'Rust', 'PHP'];
