@@ -1,144 +1,338 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { 
-  FileCode, 
-  Plus, 
-  Search, 
-  Filter, 
-  ChevronRight,
-  Github,
-  Calendar,
-  CheckCircle
-} from 'lucide-react'
-import { motion } from 'framer-motion'
-import { testService } from '../services/testService'
-import { Project } from '../types'
+import React, { useState } from 'react';
+import { Layout } from '../components/layout/Layout';
+import { CodeIcon, PlusIcon, ViewGridIcon, ViewListIcon, FilterIcon, EditIcon, TrashIcon, PlayIcon } from '../components/icons';
+
+interface Project {
+  id: number;
+  name: string;
+  description: string;
+  language: string;
+  testCases: number;
+  coverage: number;
+  status: 'active' | 'pending' | 'completed';
+  lastUpdated: string;
+  author: string;
+}
 
 export const Projects: React.FC = () => {
-  const [projects, setProjects] = React.useState<Project[]>([])
-  const [loading, setLoading] = React.useState(true)
-  const [searchTerm, setSearchTerm] = React.useState('')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'pending' | 'completed'>('all');
+  const [languageFilter, setLanguageFilter] = useState<string>('all');
 
-  React.useEffect(() => {
-    const loadProjects = async () => {
-      const data = await testService.getProjects()
-      setProjects(data)
-      setLoading(false)
-    }
-    loadProjects()
-  }, [])
+  const projects: Project[] = [
+    {
+      id: 1,
+      name: 'DocuForge',
+      description: '智能文档生成平台，支持多种文档格式自动生成',
+      language: 'TypeScript',
+      testCases: 1234,
+      coverage: 87.5,
+      status: 'active',
+      lastUpdated: '2 分钟前',
+      author: 'Admin User',
+    },
+    {
+      id: 2,
+      name: 'AuthSystem',
+      description: '企业级身份认证系统，支持 OAuth2、JWT 等',
+      language: 'Java',
+      testCases: 856,
+      coverage: 76.3,
+      status: 'active',
+      lastUpdated: '15 分钟前',
+      author: 'John Doe',
+    },
+    {
+      id: 3,
+      name: 'UserService',
+      description: '用户管理微服务，提供用户 CRUD 操作',
+      language: 'Go',
+      testCases: 432,
+      coverage: 92.1,
+      status: 'completed',
+      lastUpdated: '1 小时前',
+      author: 'Mike Chen',
+    },
+    {
+      id: 4,
+      name: 'DataProcessor',
+      description: '大数据处理流水线，支持实时数据处理',
+      language: 'Python',
+      testCases: 234,
+      coverage: 68.9,
+      status: 'pending',
+      lastUpdated: '2 小时前',
+      author: 'Jane Smith',
+    },
+    {
+      id: 5,
+      name: 'AnalyticsAPI',
+      description: '数据分析 API，提供多种数据统计功能',
+      language: 'Rust',
+      testCases: 567,
+      coverage: 81.2,
+      status: 'active',
+      lastUpdated: '3 小时前',
+      author: 'Sarah Wilson',
+    },
+    {
+      id: 6,
+      name: 'NotificationService',
+      description: '通知服务，支持邮件、短信、推送等多种渠道',
+      language: 'PHP',
+      testCases: 189,
+      coverage: 59.4,
+      status: 'pending',
+      lastUpdated: '5 小时前',
+      author: 'Admin User',
+    },
+  ];
 
-  const filteredProjects = projects.filter(project =>
-    project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    project.description.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const languages = ['all', 'TypeScript', 'Java', 'Go', 'Python', 'Rust', 'PHP'];
 
-  if (loading) {
+  const filteredProjects = projects.filter((project) => {
+    const matchesStatus = statusFilter === 'all' || project.status === statusFilter;
+    const matchesLanguage = languageFilter === 'all' || project.language === languageFilter;
+    return matchesStatus && matchesLanguage;
+  });
+
+  const getStatusBadge = (status: string) => {
+    const colors = {
+      active: 'bg-green-100 text-green-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      completed: 'bg-blue-100 text-blue-800',
+    };
+    const labels = {
+      active: '进行中',
+      pending: '待处理',
+      completed: '已完成',
+    };
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-      </div>
-    )
-  }
+      <span className={`px-2 py-1 text-xs font-medium rounded-full ${colors[status as keyof typeof colors]}`}>
+        {labels[status as keyof typeof labels]}
+      </span>
+    );
+  };
+
+  const getCoverageColor = (coverage: number) => {
+    if (coverage >= 90) return 'text-green-600';
+    if (coverage >= 70) return 'text-yellow-600';
+    return 'text-red-600';
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">项目管理</h1>
-            <p className="text-gray-600">管理您的测试项目和测试用例</p>
-          </div>
-          <Link
-            to="/projects/new"
-            className="mt-4 sm:mt-0 inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
-          >
-            <Plus className="w-5 h-5" />
-            新建项目
-          </Link>
-        </div>
-
-        {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="搜索项目..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
-          </div>
-          <button className="flex items-center gap-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <Filter className="w-5 h-5 text-gray-600" />
-            <span className="text-gray-700">筛选</span>
-          </button>
-        </div>
-
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
-                  <FileCode className="w-6 h-6 text-white" />
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">
-                    {project.language}
-                  </span>
-                </div>
-              </div>
-              
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {project.name}
-              </h3>
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                {project.description}
-              </p>
-
-              <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                <div className="flex items-center gap-1">
-                  <Github className="w-4 h-4" />
-                  <span className="truncate max-w-[150px]">
-                    {project.repositoryUrl.replace('https://github.com/', '')}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <Calendar className="w-4 h-4" />
-                  <span>更新于 {new Date(project.updatedAt).toLocaleDateString()}</span>
-                </div>
-                <Link
-                  to={`/projects/${project.id}`}
-                  className="flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium text-sm"
+    <Layout title="项目管理">
+      <div className="space-y-6">
+        {/* 工具栏 */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            <div className="flex flex-wrap gap-4 items-center">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as any)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">所有状态</option>
+                <option value="active">进行中</option>
+                <option value="pending">待处理</option>
+                <option value="completed">已完成</option>
+              </select>
+              <select
+                value={languageFilter}
+                onChange={(e) => setLanguageFilter(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                {languages.map((lang) => (
+                  <option key={lang} value={lang}>
+                    {lang === 'all' ? '所有语言' : lang}
+                  </option>
+                ))}
+              </select>
+              <div className="flex items-center gap-2 border border-gray-300 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-2 transition-colors ${
+                    viewMode === 'grid' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
+                  }`}
                 >
-                  查看
-                  <ChevronRight className="w-4 h-4" />
-                </Link>
+                  <ViewGridIcon className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-2 transition-colors ${
+                    viewMode === 'list' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <ViewListIcon className="w-5 h-5" />
+                </button>
               </div>
-            </motion.div>
-          ))}
+            </div>
+            <button className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <PlusIcon className="w-5 h-5" />
+              <span>新建项目</span>
+            </button>
+          </div>
         </div>
 
-        {filteredProjects.length === 0 && (
-          <div className="text-center py-16">
-            <FileCode className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">没有找到项目</h3>
-            <p className="text-gray-500">试试其他搜索词或创建一个新项目</p>
+        {/* 网格视图 */}
+        {viewMode === 'grid' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProjects.map((project) => (
+              <div key={project.id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+                <div className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-400 flex items-center justify-center">
+                      <CodeIcon className="w-6 h-6 text-white" />
+                    </div>
+                    {getStatusBadge(project.status)}
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">{project.name}</h3>
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">{project.description}</p>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-500">编程语言</span>
+                      <span className="font-medium text-gray-900">{project.language}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-500">测试用例</span>
+                      <span className="font-medium text-gray-900">{project.testCases.toLocaleString()}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-500">覆盖率</span>
+                      <span className={`font-medium ${getCoverageColor(project.coverage)}`}>{project.coverage}%</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-500">最后更新</span>
+                      <span className="text-gray-600">{project.lastUpdated}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="border-t border-gray-200 px-6 py-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-400 flex items-center justify-center text-white text-xs font-medium">
+                        {project.author.charAt(0)}
+                      </div>
+                      <span className="text-sm text-gray-600">{project.author}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                        <PlayIcon className="w-4 h-4" />
+                      </button>
+                      <button className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+                        <EditIcon className="w-4 h-4" />
+                      </button>
+                      <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                        <TrashIcon className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         )}
+
+        {/* 列表视图 */}
+        {viewMode === 'list' && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      项目
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      语言
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      测试用例
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      覆盖率
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      状态
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      最后更新
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      操作
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredProjects.map((project) => (
+                    <tr key={project.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-blue-400 flex items-center justify-center">
+                              <CodeIcon className="w-5 h-5 text-white" />
+                            </div>
+                          </div>
+                          <div className="ml-4">
+                            <div className="text-sm font-medium text-gray-900">{project.name}</div>
+                            <div className="text-sm text-gray-500">{project.description}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm text-gray-900">{project.language}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm text-gray-900">{project.testCases.toLocaleString()}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`text-sm font-medium ${getCoverageColor(project.coverage)}`}>
+                          {project.coverage}%
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {getStatusBadge(project.status)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className="text-sm text-gray-600">{project.lastUpdated}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center space-x-2">
+                          <button className="p-1.5 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors">
+                            <PlayIcon className="w-4 h-4" />
+                          </button>
+                          <button className="p-1.5 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                            <EditIcon className="w-4 h-4" />
+                          </button>
+                          <button className="p-1.5 text-red-600 hover:bg-red-100 rounded-lg transition-colors">
+                            <TrashIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* 分页 */}
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-gray-700">
+            显示 <span className="font-medium">1</span> 到 <span className="font-medium">{filteredProjects.length}</span> 条结果，共 <span className="font-medium">{filteredProjects.length}</span> 条
+          </div>
+          <div className="flex items-center space-x-2">
+            <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500 hover:bg-gray-50 disabled:opacity-50" disabled>
+              上一页
+            </button>
+            <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm">1</button>
+            <button className="px-3 py-1 border border-gray-300 rounded text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50" disabled>
+              下一页
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-  )
-}
+    </Layout>
+  );
+};
