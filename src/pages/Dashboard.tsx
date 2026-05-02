@@ -1,8 +1,11 @@
 import React from 'react';
 import { Layout } from '../components/layout/Layout';
 import { TestCaseIcon, CodeIcon, TrendUpIcon, UserIcon } from '../components/icons';
+import { useTheme } from '../contexts/ThemeContext';
 
 export const Dashboard: React.FC = () => {
+  const { theme } = useTheme();
+  
   const stats = [
     { label: '总测试用例', value: '12,543', icon: TestCaseIcon, color: 'from-blue-500 to-blue-400' },
     { label: '自动化覆盖率', value: '87.6%', icon: TrendUpIcon, color: 'from-green-500 to-green-400' },
@@ -31,11 +34,13 @@ export const Dashboard: React.FC = () => {
         {/* 统计卡片 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div key={index} className={`rounded-xl shadow-sm border p-6 transition-colors duration-300 ${
+              theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
-                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                  <p className={`text-sm mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{stat.label}</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{stat.value}</p>
                 </div>
                 <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center`}>
                   <stat.icon className="w-6 h-6 text-white" />
@@ -47,20 +52,24 @@ export const Dashboard: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 最近活动 */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">最近活动</h3>
+          <div className={`rounded-xl shadow-sm border p-6 transition-colors duration-300 ${
+            theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          }`}>
+            <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>最近活动</h3>
             <div className="space-y-3">
               {recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                <div key={activity.id} className={`flex items-start gap-3 p-3 rounded-lg transition-colors ${
+                  theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
+                }`}>
                   <div className={`mt-1 w-2 h-2 rounded-full ${
                     activity.status === 'success' ? 'bg-green-500' :
                     activity.status === 'pending' ? 'bg-yellow-500' : 'bg-red-500'
                   }`} />
                   <div className="flex-1">
-                    <p className="text-sm text-gray-900">
+                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>
                       <span className="font-medium">{activity.action}</span> 针对 {activity.target}
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                    <p className={`text-xs mt-1 ${theme === 'dark' ? 'text-gray-500' : 'text-gray-500'}`}>{activity.time}</p>
                   </div>
                 </div>
               ))}
@@ -68,29 +77,35 @@ export const Dashboard: React.FC = () => {
           </div>
 
           {/* 项目进度 */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">项目进度</h3>
+          <div className={`rounded-xl shadow-sm border p-6 transition-colors duration-300 ${
+            theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          }`}>
+            <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>项目进度</h3>
             <div className="space-y-4">
               {projects.map((project) => (
-                <div key={project.id} className="p-4 bg-gray-50 rounded-lg">
+                <div key={project.id} className={`p-4 rounded-lg transition-colors duration-300 ${
+                  theme === 'dark' ? 'bg-gray-700/50' : 'bg-gray-50'
+                }`}>
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <p className="font-medium text-gray-900">{project.name}</p>
-                      <p className="text-xs text-gray-500">{project.type}</p>
+                      <p className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{project.name}</p>
+                      <p className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{project.type}</p>
                     </div>
                     <span className={`text-xs px-2 py-1 rounded-full ${
-                      project.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                      project.status === 'active' 
+                        ? theme === 'dark' ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-800'
+                        : theme === 'dark' ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-800'
                     }`}>
                       {project.status === 'active' ? '进行中' : '待处理'}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className={`w-full rounded-full h-2 ${theme === 'dark' ? 'bg-gray-600' : 'bg-gray-200'}`}>
                     <div
                       className="bg-gradient-to-r from-blue-500 to-blue-400 h-2 rounded-full transition-all duration-500"
                       style={{ width: `${project.progress}%` }}
                     />
                   </div>
-                  <p className="text-xs text-gray-500 mt-1 text-right">{project.progress}%</p>
+                  <p className={`text-xs mt-1 text-right ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{project.progress}%</p>
                 </div>
               ))}
             </div>
@@ -98,24 +113,42 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* 快速操作 */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">快速操作</h3>
+        <div className={`rounded-xl shadow-sm border p-6 transition-colors duration-300 ${
+          theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        }`}>
+          <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>快速操作</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all text-center">
-              <TestCaseIcon className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900">生成单元测试</p>
+            <button className={`p-4 border-2 border-dashed rounded-lg transition-all text-center ${
+              theme === 'dark'
+                ? 'border-gray-600 hover:border-blue-500 hover:bg-blue-900/20'
+                : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50'
+            }`}>
+              <TestCaseIcon className={`w-8 h-8 mx-auto mb-2 ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'}`} />
+              <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>生成单元测试</p>
             </button>
-            <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-green-500 hover:bg-green-50 transition-all text-center">
-              <CodeIcon className="w-8 h-8 text-green-600 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900">生成接口测试</p>
+            <button className={`p-4 border-2 border-dashed rounded-lg transition-all text-center ${
+              theme === 'dark'
+                ? 'border-gray-600 hover:border-green-500 hover:bg-green-900/20'
+                : 'border-gray-300 hover:border-green-500 hover:bg-green-50'
+            }`}>
+              <CodeIcon className={`w-8 h-8 mx-auto mb-2 ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`} />
+              <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>生成接口测试</p>
             </button>
-            <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-all text-center">
-              <TrendUpIcon className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900">生成边界测试</p>
+            <button className={`p-4 border-2 border-dashed rounded-lg transition-all text-center ${
+              theme === 'dark'
+                ? 'border-gray-600 hover:border-purple-500 hover:bg-purple-900/20'
+                : 'border-gray-300 hover:border-purple-500 hover:bg-purple-50'
+            }`}>
+              <TrendUpIcon className={`w-8 h-8 mx-auto mb-2 ${theme === 'dark' ? 'text-purple-400' : 'text-purple-600'}`} />
+              <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>生成边界测试</p>
             </button>
-            <button className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-all text-center">
-              <UserIcon className="w-8 h-8 text-orange-600 mx-auto mb-2" />
-              <p className="text-sm font-medium text-gray-900">导入测试文件</p>
+            <button className={`p-4 border-2 border-dashed rounded-lg transition-all text-center ${
+              theme === 'dark'
+                ? 'border-gray-600 hover:border-orange-500 hover:bg-orange-900/20'
+                : 'border-gray-300 hover:border-orange-500 hover:bg-orange-50'
+            }`}>
+              <UserIcon className={`w-8 h-8 mx-auto mb-2 ${theme === 'dark' ? 'text-orange-400' : 'text-orange-600'}`} />
+              <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>导入测试文件</p>
             </button>
           </div>
         </div>
