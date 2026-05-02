@@ -267,15 +267,15 @@ export const mockTestReports: TestReport[] = [
 ]
 
 export const mockDashboardStats = {
-  totalProjects: 5,
-  totalTestCases: 442,
-  totalReports: 145,
-  avgCoverage: 89.1,
+  totalProjects: 8,
+  totalTestCases: 1568,
+  totalReports: 156,
+  avgCoverage: 89.5,
   recentTests: [
     { name: '电商平台 API', count: 156, passed: 142, date: '今天' },
     { name: '用户认证服务', count: 89, passed: 85, date: '昨天' },
     { name: '数据分析工具', count: 67, passed: 62, date: '2天前' },
-    { name: '实时聊天系统', count: 67, passed: 65, date: '今天' },
-    { name: '支付网关服务', count: 112, passed: 108, date: '昨天' }
+    { name: '实时聊天系统', count: 312, passed: 298, date: '今天' },
+    { name: '支付网关服务', count: 456, passed: 441, date: '昨天' }
   ]
 }
